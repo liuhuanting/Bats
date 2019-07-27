@@ -100,51 +100,84 @@
     </dependencies>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.drill.tools</groupId>
+                <artifactId>drill-fmpp-maven-plugin</artifactId>
+                <version>1.14.0</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <config>src/main/codegen/config.fmpp</config>
+                            <templates>src/main/codegen/templates</templates>
+                        </configuration>
+                        <id>generate-fmpp-sources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>javacc-maven-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>javacc</id>
+                        <goals>
+                            <goal>javacc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.build.directory}/generated-sources/fmpp</sourceDirectory>
+                            <includes>
+                                <include>**/Parser.jj</include>
+                            </includes>
+                            <lookAhead>2</lookAhead>
+                            <isStatic>false</isStatic>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- <plugin> <groupId>net.hydromatic</groupId> <artifactId>hydromatic-resource-maven-plugin</artifactId> 
+                <version>0.6</version> <executions> <execution> <goals> <goal>generate-sources</goal> 
+                </goals> <configuration> <packageName>org.apache.calcite.util</packageName> 
+                </configuration> </execution> </executions> </plugin> -->
+        </plugins>
         <pluginManagement>
             <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
                 <plugin>
-                    <groupId>org.apache.drill.tools</groupId>
-                    <artifactId>drill-fmpp-maven-plugin</artifactId>
-                    <version>1.14.0</version>
-                    <executions>
-                        <execution>
-                            <configuration>
-                                <config>src/main/codegen/config.fmpp</config>
-                                <templates>src/main/codegen/templates</templates>
-                            </configuration>
-                            <id>generate-fmpp-sources</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>generate</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.drill.tools
+                                        </groupId>
+                                        <artifactId>
+                                            drill-fmpp-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.14.0,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>generate</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>javacc-maven-plugin</artifactId>
-                    <version>2.4</version>
-                    <executions>
-                        <execution>
-                            <id>javacc</id>
-                            <goals>
-                                <goal>javacc</goal>
-                            </goals>
-                            <configuration>
-                                <sourceDirectory>${project.build.directory}/generated-sources/fmpp</sourceDirectory>
-                                <includes>
-                                    <include>**/Parser.jj</include>
-                                </includes>
-                                <lookAhead>2</lookAhead>
-                                <isStatic>false</isStatic>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- <plugin> <groupId>net.hydromatic</groupId> <artifactId>hydromatic-resource-maven-plugin</artifactId> 
-                    <version>0.6</version> <executions> <execution> <goals> <goal>generate-sources</goal> 
-                    </goals> <configuration> <packageName>org.apache.calcite.util</packageName> 
-                    </configuration> </execution> </executions> </plugin> -->
             </plugins>
         </pluginManagement>
     </build>
